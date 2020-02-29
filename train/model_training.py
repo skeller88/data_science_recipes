@@ -67,14 +67,14 @@ def classify(fold_num, pipeline_output_dir, pipeline_name, pipeline, scoring, x,
     :param test:
     :return:
     """
-    results = defaultdict(list)
+    results = {}
     start = time.time()
     pipeline_fold = clone(pipeline)
     pipeline_fold.fit(x[train], y[train])
     train_time = time.time() - start
-    results['train_time'].append(train_time)
+    results['train_time'] = train_time
     score = scoring(pipeline_fold, x[test], y[test])
-    results['valid_score'].append(score)
+    results['valid_score'] = score
 
     # pipeline_ext = "pipeline" if pipeline_name == "xgb_classifier" else "joblib"
     pipeline_ext = "joblib"
@@ -83,15 +83,15 @@ def classify(fold_num, pipeline_output_dir, pipeline_name, pipeline, scoring, x,
     return results
 
 
-def analyze_classification(cv_results):
-    flattened_scores = []
-    for pipeline_name, score_data in cv_results.items():
-        flattened = {key: np.mean(value) for key, value in score_data.items() if key in ['valid_score', 'train_time']}
-        flattened['pipeline_name'] = pipeline_name
+def analyze_classification(pipeline_cv_results):
+    mean_scores = []
+    for pipeline_name, score_data in pipeline_cv_results.items():
+        means = pd.DataFrame(pipeline_cv_results[pipeline_name]).mean().to_dict()
+        means['pipeline_name'] = pipeline_name
 
-        flattened_scores.append(flattened)
+        mean_scores.append(means)
 
-    return pd.DataFrame(flattened_scores).sort_values(by='valid_score', ascending=False)
+    return pd.DataFrame(mean_scores).sort_values(by='valid_score', ascending=False)
 
 # non-default parameters are from https://arxiv.org/pdf/1708.05070.pdf
 pipelines = {
