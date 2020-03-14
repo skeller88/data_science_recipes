@@ -16,12 +16,12 @@ def score_func(random_state, pipeline_factory, pipeline_output_dir, n_jobs, pipe
                              pipeline_output_dir=pipeline_output_dir,
                              scoring=scoring, xtrain=xtrain, ytrain=ytrain)
 
-    means = pd.DataFrame(cv_results).mean().to_dict()
-    means['pipeline_name'] = pipeline_name_for_experiment
+    results = pd.DataFrame(cv_results).mean().to_dict()
+    results['pipeline_name'] = pipeline_name_for_experiment
     valid_score = pd.DataFrame(cv_results)['valid_score'].mean()
-    return {'loss': 1 - valid_score, 'status': STATUS_OK, 'results': means}
 
+    for param_name, param_value in params.items():
+        results[param_name] = param_value
 
+    return {'loss': 1 - valid_score, 'status': STATUS_OK, 'results': results}
 
-# trials = Trials()
-# best = fmin(score_func, space, algo=tpe.suggest, trials=trials, max_evals=250)

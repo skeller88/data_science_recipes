@@ -41,3 +41,4 @@ def show_rf_feature_importance(clf, x: pd.DataFrame, y: pd.DataFrame):
     importances = importances(clf, x, y, fbeta2)
     viz = plot_importances(importances)
     viz.view()
+
