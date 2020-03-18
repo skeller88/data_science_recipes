@@ -1,11 +1,17 @@
 import itertools
+import random
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
-from sklearn.metrics import precision_recall_curve
+from sklearn.metrics import precision_recall_curve, log_loss
 
+
+def get_baselines(y):
+    print('random', log_loss(y, np.array([random.uniform(0, 1) for _ in range(len(y))])))
+    print('always negative class', log_loss(y, np.array([0 for _ in range(len(y))])))
+    print('always positive class', log_loss(y, np.array([1 for _ in range(len(y))])))
 
 def get_precision_recall_df(y_actual, y_pred_probas):
     precision, recall, thresholds = precision_recall_curve(y_actual, y_pred_probas)

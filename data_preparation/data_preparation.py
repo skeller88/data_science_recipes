@@ -43,9 +43,7 @@ def impute_missing(df, missing_columns):
         df.loc[missing.index, column] = df[column].median()
     return df
 
-
-def plot_distplots(df, columns):
-    dim = math.ceil(len(columns) / 2)
-    f, axes = plt.subplots(dim, dim, figsize=(20, 20))
-    for ax, feature in zip(axes.flat, columns):
-        sns.distplot(df[feature], color="skyblue", ax=ax)
+def find_mislabeled(df):
+    df_mislabeled = df.groupby(['text']).nunique().sort_values(by='target', ascending=False)
+    df_mislabeled = df_mislabeled[df_mislabeled['target'] > 1]['target']
+    df_mislabeled.index.tolist()

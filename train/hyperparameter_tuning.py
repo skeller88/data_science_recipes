@@ -7,21 +7,21 @@ from sklearn.model_selection import StratifiedKFold
 from train.model_training import cv_classify
 
 
-def score_func(random_state, pipeline_factory, pipeline_output_dir, n_jobs, pipeline_name, scoring, xtrain, ytrain, params):
+def score_func(random_state, pipeline_factory, pipeline_output_dir, n_jobs, pipeline_name, scoring_func, xtrain, ytrain, params):
     param_hash = hash(json.dumps(params))
     pipeline = pipeline_factory(**params)
     cv = StratifiedKFold(n_splits=5, random_state=random_state)
     pipeline_name_for_experiment = f"{pipeline_name}_{param_hash}"
     cv_results = cv_classify(n_jobs=n_jobs, pipeline_name=pipeline_name_for_experiment, pipeline=pipeline, cv=cv,
                              pipeline_output_dir=pipeline_output_dir,
-                             scoring=scoring, xtrain=xtrain, ytrain=ytrain)
+                             scoring_func=scoring_func, xtrain=xtrain, ytrain=ytrain)
 
     results = pd.DataFrame(cv_results).mean().to_dict()
     results['pipeline_name'] = pipeline_name_for_experiment
-    valid_score = pd.DataFrame(cv_results)['valid_score'].mean()
+    valid_loss = pd.DataFrame(cv_results)['valid_loss'].mean()
 
     for param_name, param_value in params.items():
         results[param_name] = param_value
 
-    return {'loss': 1 - valid_score, 'status': STATUS_OK, 'results': results}
+    return {'loss': valid_loss, 'status': STATUS_OK, 'results': results}
 
