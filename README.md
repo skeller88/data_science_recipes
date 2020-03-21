@@ -1,3 +1,11 @@
+# Overview
+There are a lot of data science and machine learning tutorials out there, with custom code for every problem. I haven't
+yet found a repo that generalizes the code in these tutorials to make it easy to apply to new problems. As I tackle
+more and more data science and machine learning problems, I'll continue adding to this repo. Contributions welcome.
+
+Some of the code is meant to be copy and pasted into a jupyter notebook, like `imports.py`.
+
+# Run a notebook with a conda environment via Docker
 ```
 cp ./.bash/env_secrets.sample ./.bash/env_secrets
 # Prepare a hashed password:
