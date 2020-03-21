@@ -18,10 +18,6 @@ from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
 
-def split(random_state, x, y):
-    xtrain, xtest, ytrain, ytest = train_test_split(*[x, y], random_state=random_state, test_size=.2, stratify=y)
-    return xtrain, xtest, ytrain, ytest
-
 
 def classify_pipelines(random_state, pipeline_output_dir, pipelines, loss_func, score_funcs, xtrain, ytrain):
     results = {}
@@ -93,7 +89,7 @@ def classify(fold_num, pipeline_output_dir, pipeline_name, pipeline, loss_func, 
     pipeline_fold.fit(x[train], y[train])
     train_time = time.time() - start
     results['train_time'] = train_time
-    pred_probas = pipeline_fold.predict_proba(x[test])[:, 1]
+    pred_probas = pipeline_fold.predict_proba(x[test])
     preds = np.array([0 if prob < .5 else 1 for prob in pred_probas])
     results['valid_loss'] = loss_func(y[test], pred_probas)
 

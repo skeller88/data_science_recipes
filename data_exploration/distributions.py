@@ -7,34 +7,32 @@ import seaborn as sns
 
 
 def histogram_grid(df, columns):
-    dim = math.ceil(len(columns) / 2)
+    """
+    :param df:
+    :param columns: Must be numeric type
+    :return:
+    """
+    dim = math.ceil(math.sqrt(len(columns)))
     f, axes = plt.subplots(dim, dim, figsize=(20, 20))
     for ax, feature in zip(axes.flat, columns):
         sns.distplot(df[feature], color="skyblue", ax=ax)
 
 
-def plot_missing_variable_count(df_train, df_test, missing_cols: List[str]):
-    """
-    Compare missing  values of two dataframes
-    :param df_train:
-    :param df_test:
-    :return:
-    """
-    fig, axes = plt.subplots(ncols=2, figsize=(17, 4), dpi=100)
+def plot_variable_dists_by_class(df, target_column: str, features: List[str]):
+    has_target: pd.Series = df[target_column] == 1
 
-    sns.barplot(x=df_train[missing_cols].isnull().sum().index, y=df_train[missing_cols].isnull().sum().values,
-                ax=axes[0])
-    sns.barplot(x=df_test[missing_cols].isnull().sum().index, y=df_test[missing_cols].isnull().sum().values, ax=axes[1])
+    fig, axes = plt.subplots(ncols=1, nrows=len(features), figsize=(20, 50), dpi=100)
 
-    axes[0].set_ylabel('Missing Value Count', size=15, labelpad=20)
-    axes[0].tick_params(axis='x', labelsize=15)
-    axes[0].tick_params(axis='y', labelsize=15)
-    axes[1].tick_params(axis='x', labelsize=15)
-    axes[1].tick_params(axis='y', labelsize=15)
+    for i, feature in enumerate(features):
+        sns.distplot(df.loc[~has_target][feature], label=f'not {target_column}', ax=axes[i], color='green')
+        sns.distplot(df.loc[has_target][feature], label=f'{target_column}', ax=axes[i], color='red')
 
-    axes[0].set_title('Training Set', fontsize=13)
-    axes[1].set_title('Test Set', fontsize=13)
+        axes[i].set_xlabel('')
+        axes[i].tick_params(axis='x', labelsize=12)
+        axes[i].tick_params(axis='y', labelsize=12)
+        axes[i].legend()
 
+        axes[i].set_title(f'{feature} Target Distribution', fontsize=13)
     plt.show()
 
 

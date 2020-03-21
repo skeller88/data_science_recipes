@@ -1,4 +1,13 @@
-import math
+import pandas as pd
+from sklearn.preprocessing import OneHotEncoder
+
+
+def check_duplicates(df):
+    for column in df.columns:
+        duplicated = df[df[column].duplicated()]
+        if len(duplicated) > 0:
+            print(column, len(duplicated), len(duplicated) / len(df) * 100)
+
 
 def check_missing_values(df):
     # Check % missing values
@@ -7,7 +16,8 @@ def check_missing_values(df):
         if len(missing) > 0:
             print(column, len(missing), len(missing) / len(df) * 100)
 
-def add_dummies(df, columns):
+
+def one_hot_encode_categorical(df, columns):
     dfs_to_concat = [df]
     categories = []
     for column in columns:
@@ -20,6 +30,21 @@ def add_dummies(df, columns):
         dfs_to_concat.append(pd.DataFrame(encoded, index=df.index, columns=encoder.categories_[0]))
 
     return pd.concat(dfs_to_concat, axis=1), categories
+
+
+def encode_hccf():
+    """
+    HCCF - high cardinality categorical features.
+
+    "Many studies have shown that One-Hot encoding high cardinality categorical features is not the best way to go,
+    especially in tree based algorithms...The basic idea of Target Statistics is simple. We replace a categorical value
+    by the mean of all the targets for the training samples with the same categorical value."
+    https://deep-and-shallow.com/2020/02/29/the-gradient-boosters-v-catboost/
+
+    TODO - https://catboost.ai/docs/concepts/algorithm-main-stages_cat-to-numberic.html
+
+    :return:
+    """
 
 
 def add_decomposed_date_variables(df, columns, date_parts=['year', 'month', 'day']):

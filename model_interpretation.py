@@ -32,7 +32,17 @@ def get_xgb_shap(pipeline_results, xtrain: np.array, feature_names):
     shap.initjs()
     # shap.force_plot(explainer.expected_value, shap_values[0,:], xtrain[0,:], feature_names=xdf.columns)
     return pd.DataFrame({'shap_value': shap_values[0, :], 'feature_names': feature_names}).sort_values(by='shap_value',
+                                                                                                       ascending=False)
+
+
+
+
+def get_xgb_importance():
+    pd.DataFrame({'shap_value': shap_values[0, :], 'feature_names': feature_names}).sort_values(by='shap_value',
                                                                                                 ascending=False)
+
+    shap.summary_plot(shap_values, xtest, plot_type="bar",  feature_names=feature_names)
+    shap.summary_plot(shap_values, xtest, feature_names=feature_names)
 
 def show_rf_feature_importance(clf, x: pd.DataFrame, y: pd.DataFrame):
     def fbeta2(clf, x, y):
@@ -41,4 +51,3 @@ def show_rf_feature_importance(clf, x: pd.DataFrame, y: pd.DataFrame):
     importances = importances(clf, x, y, fbeta2)
     viz = plot_importances(importances)
     viz.view()
-

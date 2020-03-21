@@ -25,3 +25,14 @@ def score_func(random_state, pipeline_factory, pipeline_output_dir, n_jobs, pipe
 
     return {'loss': valid_loss, 'status': STATUS_OK, 'results': results}
 
+
+def analyze_trials(trials):
+    flattened = []
+    for trial in trials.trials:
+        result = trial['result']
+        trial_dict = result['results']
+        trial_dict['loss'] = result['loss']
+        flattened.append(trial_dict)
+
+    results = pd.DataFrame(flattened)
+    return results.sort_values(by='loss')

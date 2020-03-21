@@ -1,0 +1,24 @@
+name: null
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - dask
+  - imageio
+  - jupyter
+  - python=3.6
+  - pandas
+  - pip
+  - nb_conda
+  - numpy
+  - scikit-learn>=0.22.0
+  - pip:
+    - auto-sklearn
+    - hyperopt
+    - lightgbm
+    - requests
+    - rfpimp
+    - seaborn
+    - shap
+    - xgboost
+    - tpot

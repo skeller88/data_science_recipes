@@ -8,7 +8,7 @@ def kfold_predict_class(x, model_path_prefix, n_folds, class_threshold):
     all_predicted_probas = []
     for fold_num in n_folds:
         model = load(f"{model_path_prefix}_fold{fold_num}.joblib")
-        predicted_probas = model.predict_proba(x)
+        predicted_probas = model.predict_proba(x)[:, 1]
         all_predicted_probas.append(np.array(predicted_probas))
 
     mean_predicted_probas = np.stack(all_predicted_probas).mean(axis=0)
@@ -17,9 +17,8 @@ def kfold_predict_class(x, model_path_prefix, n_folds, class_threshold):
     return predicted_classes, mean_predicted_probas
 
 
-def predict_class(x, model_path, class_threshold):
-    clf = load(model_path)
-    predicted_probas = clf.predict(x)[:, 1]
+def predict_class(x, model, class_threshold):
+    predicted_probas = model.predict(x)[:, 1]
     predicted_classes = np.array([0 if proba < class_threshold else 1 for proba in predicted_probas])
 
     return predicted_classes, predicted_probas

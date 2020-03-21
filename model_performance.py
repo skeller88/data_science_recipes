@@ -13,6 +13,7 @@ def get_baselines(y):
     print('always negative class', log_loss(y, np.array([0 for _ in range(len(y))])))
     print('always positive class', log_loss(y, np.array([1 for _ in range(len(y))])))
 
+
 def get_precision_recall_df(y_actual, y_pred_probas):
     precision, recall, thresholds = precision_recall_curve(y_actual, y_pred_probas)
     df = pd.DataFrame({'precision': precision[:-1], 'recall': recall[:-1], 'threshold': thresholds}).sort_values(
@@ -67,7 +68,7 @@ def plot_confusion_matrix(cm, classes,
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
         plt.text(j, i, format(cm[i, j], fmt),
                  horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
+                 color="lightgrey" if cm[i, j] > thresh else "darkgrey")
 
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
