@@ -1,1 +1,0 @@
-export JUPYTER_PASSWORD_SHA=[your-password-sha]
