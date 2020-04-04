@@ -6,16 +6,71 @@ import pandas as pd
 import seaborn as sns
 
 
-def histogram_grid(df, columns):
+def print_relative_frequencies(df, columns):
+    for column in columns:
+        print('\n')
+        print(column, df[column].value_counts() / len(df) * 100)
+
+
+def histogram_grid(df, columns, should_plot_missing):
     """
+    :param df:
+    :param columns
+    :return:
+    """
+    if len(columns) < 5:
+        n_cols = 2
+    else:
+        n_cols = 5
+    n_rows = math.ceil(len(columns) / n_cols)
+    f, axes = plt.subplots(n_rows, n_cols, figsize=(20, 20))
+    for ax, feature in zip(axes.flat, sorted(columns)):
+        data = df[feature]
+        if should_plot_missing:
+            data = data
+        data.hist(ax=ax)
+        ax.set_title(feature, pad=-10)
+
+
+def boxplot(df, columns):
+    df[columns].plot.box(vert=False, figsize=(15, 10))
+
+
+def distplot_grid(df, columns):
+    """
+    Usage if there are lots of parameters
+
+    for start in range(0, len(col_dtypes['int64']), 16):
+        distplot_grid(df, col_dtypes['int64'][start:start+16])
     :param df:
     :param columns: Must be numeric type
     :return:
     """
-    dim = math.ceil(math.sqrt(len(columns)))
-    f, axes = plt.subplots(dim, dim, figsize=(20, 20))
+    if len(columns) < 5:
+        n_cols = 2
+    else:
+        n_cols = 4
+
+    n_rows = math.ceil(len(columns) / n_cols)
+    f, axes = plt.subplots(n_rows, n_cols, figsize=(20, 20))
     for ax, feature in zip(axes.flat, columns):
-        sns.distplot(df[feature], color="skyblue", ax=ax)
+        try:
+            sns.distplot(df[feature], hist=False, color="skyblue", ax=ax)
+        except Exception as ex:
+            print('Could not set KDE for feature', feature)
+            df[feature].hist(ax=ax)
+        ax.set_title(feature, pad=-10)
+
+
+def binary_distribution(df, column_name):
+    num_samples = len(df)
+    df['count'] = 1
+    dfg = df.groupby(column_name).count()
+
+    positive_class_pct = (dfg.loc[0] / num_samples)[0]
+    negative_class_pct = (dfg.loc[1] / num_samples)[0]
+
+    return negative_class_pct, positive_class_pct
 
 
 def plot_variable_dists_by_class(df, target_column: str, features: List[str]):

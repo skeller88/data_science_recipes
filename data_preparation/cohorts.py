@@ -19,6 +19,11 @@ def add_cohort_and_period(df, action_dt_column, action_dt_str) -> pd.DataFrame:
 
     # determine the user's cohort group based on their first action
     df['cohort'] = df.groupby(level=0)[action_dt_column].min().apply(lambda x: x.strftime(action_dt_str))
+    unique_cohorts = df['cohort'].unique()
+    cohorts_to_cohort_periods = {
+        cohort: cohort_num for cohort_num, cohort in enumerate(unique_cohorts)
+    }
+    df['cohort_num'] = df.apply(lambda row: cohorts_to_cohort_periods[row['cohort']], axis=1)
 
     return df
 

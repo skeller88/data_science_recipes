@@ -9,14 +9,12 @@ from joblib import dump, Parallel, delayed
 from sklearn.base import clone
 from sklearn.ensemble import ExtraTreesClassifier, GradientBoostingClassifier, RandomForestClassifier
 from sklearn.metrics import fbeta_score, make_scorer, \
-accuracy_score, average_precision_score, confusion_matrix, log_loss, precision_recall_fscore_support, \
-precision_score, precision_recall_curve
+    log_loss
 from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
-
 
 
 def classify_pipelines(random_state, pipeline_output_dir, pipelines, loss_func, score_funcs, xtrain, ytrain):
@@ -89,7 +87,7 @@ def classify(fold_num, pipeline_output_dir, pipeline_name, pipeline, loss_func, 
     pipeline_fold.fit(x[train], y[train])
     train_time = time.time() - start
     results['train_time'] = train_time
-    pred_probas = pipeline_fold.predict_proba(x[test])
+    pred_probas = pipeline_fold.predict_proba(x[test])[:, 1]
     preds = np.array([0 if prob < .5 else 1 for prob in pred_probas])
     results['valid_loss'] = loss_func(y[test], pred_probas)
 
@@ -105,6 +103,11 @@ def classify(fold_num, pipeline_output_dir, pipeline_name, pipeline, loss_func, 
 
 
 def analyze_classification(pipeline_results):
+    results = [result for result in pipeline_results.values()]
+    return pd.DataFrame(results).sort_values(by='valid_loss')
+
+
+def analyze_cv_classification(pipeline_results):
     mean_scores = []
     for pipeline_name, score_data in pipeline_results.items():
         index = [num for num in range(len(score_data))]

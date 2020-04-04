@@ -19,22 +19,25 @@ def get_xgb_feature_importance(actual_feature_names, model_path):
     return pd.DataFrame(actual_features).sort_values(by='gain', ascending=False)
 
 
-def get_xgb_shap(pipeline_results, xtrain: np.array, feature_names):
+def get_xgb_shap(pipeline_results, x: np.array, feature_names):
     """
     Use SHAP: https://towardsdatascience.com/interpretable-machine-learning-with-xgboost-9ec80d148d27
     :param pipeline_results:
-    :param xtrain:
+    :param x:
     :param feature_names:
     :return:
     """
     explainer = shap.TreeExplainer(pipeline_results._final_estimator)
-    shap_values = explainer.shap_values(xtrain[:1000])
+    shap_values = explainer.shap_values(x)
     shap.initjs()
     # shap.force_plot(explainer.expected_value, shap_values[0,:], xtrain[0,:], feature_names=xdf.columns)
     return pd.DataFrame({'shap_value': shap_values[0, :], 'feature_names': feature_names}).sort_values(by='shap_value',
                                                                                                        ascending=False)
 
 
+def plot_shap(shap_values, x, feature_names):
+    shap.summary_plot(shap_values, x, plot_type="bar", feature_names=feature_names)
+    shap.summary_plot(shap_values, x, feature_names=feature_names)
 
 
 def get_xgb_importance():
@@ -43,6 +46,7 @@ def get_xgb_importance():
 
     shap.summary_plot(shap_values, xtest, plot_type="bar",  feature_names=feature_names)
     shap.summary_plot(shap_values, xtest, feature_names=feature_names)
+
 
 def show_rf_feature_importance(clf, x: pd.DataFrame, y: pd.DataFrame):
     def fbeta2(clf, x, y):
