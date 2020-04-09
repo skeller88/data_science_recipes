@@ -2,7 +2,7 @@ from hyperopt import hp
 from hyperopt.pyll.base import scope
 from xgboost import XGBClassifier
 
-from train.hyperparameter_tuning import score_func
+from src.train import score_func
 
 # Haven't found a paper yet that gives the best parameters
 xgb_classifier_space = {

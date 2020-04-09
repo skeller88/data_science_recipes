@@ -33,6 +33,34 @@ def balanced_class_splits(random_state, df, target_class):
 
     return train, test
 
+def binned_splits(random_state, df, target_class):
+    """
+    Split continuous data.
+
+    https://bookdown.org/max/FES/data-splitting.html
+
+    https://github.com/scikit-learn/scikit-learn/issues/4757
+    :param random_state:
+    :param df:
+    :param target_class:
+    :return:
+    """
+    bins = np.linspace(0, 50, 25)
+    y = df[target_class].values
+    y_binned = np.digitize(y, bins)
+    xtrain, xtest, ytrain, ytest = train_test_split(df.drop(target_class, axis=1), y, stratify=y_binned,
+                                                        random_state=random_state)
+    return xtrain, xtest, ytrain, ytest
+
+
+def validate_splits(xtrain, xtest, ytrain, ytest):
+    print(xtrain.shape, xtest.shape, ytrain.shape, ytest.shape)
+    assert xtrain.shape[1] == xtest.shape[1]
+    assert len(ytrain.shape) == len(ytest.shape)
+
+    assert xtrain.shape[0] == ytrain.shape[0]
+    assert xtest.shape[0] == ytest.shape[0]
+
 
 def train_valid_test_splits(*dataframes: List[pd.DataFrame]):
     train_dfs = []

@@ -5,6 +5,10 @@ more and more data science and machine learning problems, I'll continue adding t
 
 Some of the code is meant to be copy and pasted into a jupyter notebook, like `imports.py`.
 
+# Directory structure
+Modeled on [Cookiecuuter Data Science](https://drivendata.github.io/cookiecutter-data-science/#directory-structure)
+
+# Setup
 # Run a notebook with a conda environment via Docker
 ```
 cp ./.bash/env_secrets.sample ./.bash/env_secrets

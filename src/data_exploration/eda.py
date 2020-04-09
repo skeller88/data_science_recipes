@@ -71,7 +71,12 @@ def plot_multiple_plots(max_features_per_plot, df, columns, plot_func, **plot_fu
 
 def correlation_heatmap(df, target=None, n_largest=None):
     f, ax = plt.subplots(figsize=(12, 9))
-    corrmat = df.corr()
+    # evidence for using both Kendall's Tau and Spearman's rho if the feature distributions are not
+    # assumed to be normal: https://stats.stackexchange.com/questions/3943/kendall-tau-or-spearmans-rho
+    # Some commenters say that Spearman's rho is more intepretable because it extends the idea of R^
+    # in that it quantifies the difference between the % of concordant and discordant pairs among all
+    # possible pairwise events.
+    corrmat = df.corr(method='spearman')
     if n_largest is not None:
         cols = corrmat.nlargest(n_largest, target)  [target].index
         cm = np.corrcoef(df[cols].values.T)

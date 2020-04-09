@@ -4,7 +4,7 @@ import pandas as pd
 from hyperopt import STATUS_OK
 from sklearn.model_selection import StratifiedKFold
 
-from train.model_training import cv_classify
+from src.train import cv_classify
 
 
 def score_func(random_state, pipeline_factory, pipeline_output_dir, n_jobs, pipeline_name, scoring_func, xtrain, ytrain, params):
