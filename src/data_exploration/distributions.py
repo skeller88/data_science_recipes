@@ -4,6 +4,7 @@ import math
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
+from scipy.stats import skew
 
 
 def print_relative_frequencies(df, columns):
@@ -60,6 +61,25 @@ def distplot_grid(df, columns):
             print('Could not set KDE for feature', feature)
             df[feature].hist(ax=ax)
         ax.set_title(feature, pad=-10)
+
+
+# skew
+def get_skew(df, columns):
+    """
+    Usage. Skew cutoff from https://www.kaggle.com/serigne/stacked-regressions-top-4-on-leaderboard
+    skewness = get_skew(df, columns)
+    skewed_columns = skewness[skewness['skew'] > 0.75].index
+    skewed_columns
+
+    :param df:
+    :param columns:
+    :return:
+    """
+    skewed_feats = df[columns].apply(lambda x: skew(x.dropna())).sort_values(ascending=False)
+    print("\nSkew in numerical features: \n")
+    skewness = pd.DataFrame({'skew': skewed_feats})
+    skewness.head(10)
+    return skew
 
 
 def binary_distribution(df, column_name):

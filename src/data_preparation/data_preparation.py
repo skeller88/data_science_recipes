@@ -1,4 +1,5 @@
 import pandas as pd
+from scipy.special._ufuncs import boxcox1p
 from sklearn.compose import ColumnTransformer
 from sklearn.impute import KNNImputer
 from sklearn.pipeline import Pipeline
@@ -9,6 +10,9 @@ from src.data_exploration.eda import get_types
 
 import numpy as np
 
+
+def boolean_mask(size):
+    return np.full(size, True, dtype=bool)
 
 def make_pipeline(df):
     x = df
@@ -58,3 +62,9 @@ def find_mislabeled(df):
     df_mislabeled = df.groupby(['text']).nunique().sort_values(by='target', ascending=False)
     df_mislabeled = df_mislabeled[df_mislabeled['target'] > 1]['target']
     df_mislabeled.index.tolist()
+
+
+def boxcox(df, columns):
+    lam = 0.15
+    for column in columns:
+        df[:, column] = boxcox1p(df[column], lam)

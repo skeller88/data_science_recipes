@@ -2,6 +2,8 @@
 import os
 from typing import Dict, Tuple, List
 
+from catboost import CatBoostRegressor
+from lightgbm import LightGBMRegressor
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import ExtraTreesRegressor, GradientBoostingRegressor, RandomForestRegressor
@@ -54,13 +56,15 @@ def analyze_results(pipeline_results):
 
 
 def analyze_cv_classification(pipeline_results):
-    mean_scores = []
+    results = []
     for pipeline_name in pipeline_results.keys():
-        means = {key: np.mean(value) for key, value in pipeline_results[pipeline_name].items()}
+        means = {key + '_mean': np.mean(value) for key, value in pipeline_results[pipeline_name].items()}
+        stds = {key + '_std': np.std(value) for key, value in pipeline_results[pipeline_name].items()}
+        means.update(stds)
         means['pipeline_name'] = pipeline_name
-        mean_scores.append(means)
+        results.append(means)
 
-    return pd.DataFrame(mean_scores)
+    return pd.DataFrame(results)
 
 
 # non-default parameters are from https://arxiv.org/pdf/1708.05070.pdf
@@ -80,6 +84,12 @@ estimators = {
     ],
     'xgb_regressor': [
         ('xgb_regressor', XGBRegressor())
+    ],
+    'lightgbm_regressor': [
+        ('lightgbm_regressor', LightGBMRegressor())
+    ],
+    'catboost_regressor': [
+        ('catboost_regressor', CatBoostRegressor())
     ],
     'lasso_regressor': [
         ('standard_scaler', StandardScaler()),

@@ -16,6 +16,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import seaborn as sns
+from scipy import stats
+from scipy.stats import norm
 
 # scikit-learn
 import sklearn
@@ -31,7 +33,9 @@ from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.svm import SVC
 
 # Models
-from xgboost import XGBClassifier
+from catboost import CatBoostRegressor
+from lightgbm import LightGBMRegressor
+from xgboost import XGBClassifier, XGBRegressor
 
 # Tensorflow
 import tensorflow as tf
