@@ -26,7 +26,7 @@ docker build -t $IMAGE_NAME \
 
 docker run -it --rm -p 8888:8888 \
 --volume ~:/home/jovyan/work \
---env-file $FILEDIR/env.list $IMAGE_NAME
+$IMAGE_NAME
 
 docker push $IMAGE_NAME
 ```

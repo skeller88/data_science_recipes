@@ -1,4 +1,9 @@
-# Try some regressors with the defaults
+"""
+Try some regressors with the defaults
+
+TODO - add https://www.kaggle.com/artgor/artgor-utils
+"""
+
 import os
 from typing import Dict, Tuple, List
 

@@ -3,7 +3,9 @@ from collections import defaultdict
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import seaborn as sns
+from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
 def get_types(df):
@@ -69,6 +71,8 @@ def plot_multiple_plots(max_features_per_plot, df, columns, plot_func, **plot_fu
         plot_func(df, columns[start:end], **plot_func_args)
 
 
+# Correlation and VIF
+
 def correlation_heatmap(df, target=None, n_largest=None):
     f, ax = plt.subplots(figsize=(12, 9))
     # evidence for using both Kendall's Tau and Spearman's rho if the feature distributions are not
@@ -87,3 +91,21 @@ def correlation_heatmap(df, target=None, n_largest=None):
         sns.heatmap(corrmat, vmax=.8, square=True)
 
     return cols
+
+
+def abs_correlation_heatmap(df, target=None):
+    f, ax = plt.subplots(figsize=(12, 9))
+    corrmat = df.corr(method='spearman')
+    corr_abs = corrmat.abs() > 0.5
+    plt.figure(figsize=(15, 10))
+    sns.heatmap(corr_abs, annot=True)
+
+
+def get_vif(x):
+    x_matrix = x.as_matrix()
+    vif = [variance_inflation_factor(x_matrix, i) for i in range(x_matrix.shape[1])]
+    vif_factors = pd.DataFrame()
+    vif_factors['column'] = x.columns
+    vif_factors['vif'] = vif
+    return vif_factors.sort_values(by=['vif'], ascending=False)
+

@@ -37,6 +37,22 @@ def boxplot(df, columns):
     df[columns].plot.box(vert=False, figsize=(15, 10))
 
 
+def boxplot_by_class(x, y, target):
+    data_dia = y
+    data = x
+    data_n_2 = (data - data.mean()) / (data.std())  # standardization
+    data = pd.concat([y, data_n_2.iloc[:, 0:10]], axis=1)
+    data = pd.melt(data, id_vars=target,
+                   var_name="features",
+                   value_name='value')
+    plt.figure(figsize=(10, 10))
+    sns.boxplot(x="features", y="value", hue="diagnosis", data=data)
+    # Alternative plots
+    # sns.swarmplot(x="features", y="value", hue="diagnosis", data=data)
+    # sns.violinplot(x="features", y="value", hue=target, data=data, split=True, inner="quart")
+    plt.xticks(rotation=90)
+
+
 def distplot_grid(df, columns):
     """
     Usage if there are lots of parameters

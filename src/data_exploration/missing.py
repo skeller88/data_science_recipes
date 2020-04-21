@@ -18,7 +18,9 @@ def get_missing_stats(df, columns):
                                  'num_not_missing': len(df) - len(missing),
                                  'pct_missing': len(missing) / len(df)})
 
-    return pd.DataFrame(missing_cols).sort_values(by='pct_missing', ascending=False)
+    if len(missing_cols) > 0:
+        return pd.DataFrame(missing_cols).sort_values(by='pct_missing', ascending=False)
+    return pd.DataFrame()
 
 
 def plot_missing_variable_count(df_train, df_test, missing_cols: List[str]):
