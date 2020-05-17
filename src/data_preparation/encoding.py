@@ -17,6 +17,11 @@ def one_hot_encode_categorical(df, columns):
     return pd.concat(dfs_to_concat, axis=1), categories
 
 
+def get_dummies_drop_level_and_join(df, column, level_to_drop):
+    dummies = pd.get_dummies(df[column]).drop([level_to_drop], axis=1)
+    return df.join(dummies).drop(column, axis=1)
+
+
 def categorical_to_ordinal(df):
     converted = []
     converter = {

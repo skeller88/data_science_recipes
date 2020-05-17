@@ -1,5 +1,10 @@
 %matplotlib inline
 
+import gc
+import re
+import string
+import operator
+from collections import defaultdict
 from joblib import dump, load
 import itertools
 import json
@@ -34,6 +39,7 @@ from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardSc
 from sklearn.svm import SVC
 
 # statsmodels
+import statsmodels.api as sm
 from statsmodels.stats.outliers_influence import variance_inflation_factor
 
 
@@ -41,29 +47,6 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from catboost import CatBoostRegressor
 from lightgbm import LGBMRegressor
 from xgboost import XGBClassifier, XGBRegressor
-
-# Tensorflow
-import tensorflow as tf
-import tensorflow_hub as hub
-from tensorflow import keras
-from tensorflow.keras.optimizers import SGD, Adam
-from tensorflow.keras.layers import Dense, Input, Dropout, GlobalAveragePooling1D
-from tensorflow.keras.models import Model, Sequential
-from tensorflow.keras.callbacks import ModelCheckpoint, EarlyStopping, Callback
-
-
-# NLP
-import gc
-import re
-import string
-import operator
-from collections import defaultdict
-
-import tokenization
-from wordcloud import STOPWORDS
-
-
-
 
 
 # Configure options

@@ -7,20 +7,25 @@ dependencies:
   - imageio
   - jupyter
   - python=3.6
+  - pytorch
   - pandas
   - pip
   - nb_conda
   - numpy
   - scikit-learn>=0.22.0
   - pip:
+    - albumentations
     - category_encoders
     - catboost
     - hyperopt
     - lightgbm
+    - opencv-python
+    - rasterio
     - requests
     - rfpimp
     - seaborn
     - shap
     - statsmodels
     - xgboost
+    - tensorflow-gpu==2.0.*
     - tpot
