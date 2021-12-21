@@ -5,9 +5,11 @@ import seaborn as sns
 import pandas as pd
 
 
-def get_missing_stats(df, columns):
+def get_missing_stats(df, columns=None):
     dtypes = df.dtypes
     missing_cols = []
+    if columns is None:
+        columns = df.columns
     for column in columns:
         missing = df[df[column].isnull()]
 

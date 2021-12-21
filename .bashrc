@@ -1,0 +1,1 @@
+../HomeDirectory/.bashrc

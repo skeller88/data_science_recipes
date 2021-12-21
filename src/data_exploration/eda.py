@@ -15,6 +15,12 @@ def get_types(df):
     return dtypes
 
 
+def groupby_count(df, column):
+    if 'count' not in df.columns:
+        return 'df must have a "count" column for this method to work.'
+    return df.groupby(column).count()['count'].sort_values(ascending=False)
+
+
 def figure_and_axes(columns, n_cols=None):
     if n_cols is None:
         if len(columns) < 5:
@@ -36,7 +42,7 @@ def plot_scatter_against_target(df, columns, target):
     n_rows = math.ceil(len(columns) / n_cols)
     f, axes = plt.subplots(n_rows, n_cols, figsize=(20, 20))
     for ax, feature in zip(axes.flat, columns):
-        sns.scatterplot(df[feature], df[target], color="skyblue", ax=ax)
+        sns.scatterplot(x=df[feature], y=df[target], color="skyblue", ax=ax)
         ax.set_title(feature, pad=-10)
 
 
@@ -47,7 +53,7 @@ def plot_boxplot_against_target(df, feature, target):
 
 
 def pairplot(df, cols):
-    sns.pairplot(df[cols], size=2.5)
+    sns.pairplot(df[cols], height=2.5)
 
 
 def plot_multiple_plots(max_features_per_plot, df, columns, plot_func, **plot_func_args):

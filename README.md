@@ -17,15 +17,17 @@ cp ./.bash/env_secrets.sample ./.bash/env_secrets
 # set JUPYTER_PASSWORD_SHA to your hashed password
 source .bash/env_secrets
 
+export BASE_IMAGE_NAME=local
 export FILEDIR=conda_jupyter_notebook
 export IMAGE_NAME=$BASE_IMAGE_NAME/conda_jupyter_notebook
+USER=[your-user-name]
 
 docker build -t $IMAGE_NAME \
 --file $FILEDIR/Dockerfile \
 --build-arg jupyter_password_sha_build_arg=$JUPYTER_PASSWORD_SHA .
 
 docker run -it --rm -p 8888:8888 \
---volume ~:/home/jovyan/work \
+--volume /Users/$USER:/home/jovyan/work \
 $IMAGE_NAME
 
 docker push $IMAGE_NAME

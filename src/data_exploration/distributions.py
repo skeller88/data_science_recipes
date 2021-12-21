@@ -127,7 +127,7 @@ def class_hists(data, column, target, bins="auto", ax=None, legend=True,
     legend : boolean, default=True
         Whether to create a legend.
     scale_separately : boolean, default=True
-        Whether to scale each class separately.
+        Whether to scale each class separately.risk__mock_dental_patients
     Examples
     --------
     >>> class_hists(data, "age", "gender", legend=True)
